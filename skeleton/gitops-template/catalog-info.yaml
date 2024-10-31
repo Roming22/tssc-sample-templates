@@ -2,25 +2,29 @@ apiVersion: backstage.io/v1alpha1
 kind: Resource
 metadata:
   name: ${{ values.appName }}
-  description: ${{ values.description}}   
+  description: ${{ values.description}}
   links:
     - url: https://www.redhat.com/en/solutions/trusted-software-supply-chain
-      title: Trusted Secure Supply Chain 
+      title: Trusted Secure Supply Chain
       icon: dashboard
       type: admin-dashboard
-  annotations:    
+  annotations:
     argocd/app-name: ${{ values.name }}
   {%- if values.isTekton %}
-    janus-idp.io/tekton: ${{ values.name }} 
+    janus-idp.io/tekton: ${{ values.name }}
   {%- endif %}
-  {%- if values.isJenkins %}
-    jenkins.io/job-full-name: ${{ values.appName }} 
+  {%- if values.isGitHubActions %}
+    github.com/project-slug: ${{ values.projectSlug }}
+  {%- elif values.isGitLabCi %}
+    gitlab.com/project-slug: ${{ values.projectSlug }}
+  {%- elif values.isJenkins %}
+    jenkins.io/job-full-name: ${{ values.appName }}
   {%- endif %}
-    backstage.io/kubernetes-id: ${{ values.name }} 
-    backstage.io/techdocs-ref: dir:. 
+    backstage.io/kubernetes-id: ${{ values.name }}
+    backstage.io/techdocs-ref: dir:.
 spec:
   type: gitops
-  owner: ${{ values.owner }} 
+  owner: ${{ values.owner }}
   lifecycle: experimental
   dependsOn:
     - component:${{ values.name }}
