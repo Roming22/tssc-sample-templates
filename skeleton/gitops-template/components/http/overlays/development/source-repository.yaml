@@ -18,3 +18,8 @@ spec:
         key:  ${{ values.webhookSecretKey }}
     {%- endif %}
   {%- endif %}
+  {%- if values.hostType == 'Github' %}
+  settings:
+    github_app_token_scope_repos:
+      - ${{ values.repoURL }}
+  {%- endif %}
